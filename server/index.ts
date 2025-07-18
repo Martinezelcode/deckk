@@ -110,9 +110,16 @@ app.use((req, res, next) => {
     log(`serving on port ${port}`);
   }).on('error', (err: any) => {
     if (err.code === 'EADDRINUSE') {
-      console.error(`Port ${port} is already in use. Please kill the existing process and try again.`);
-      console.error('Run: pkill -f "npm run dev" && pkill -f "tsx server/index.ts"');
-      process.exit(1);
+      console.error(`Port ${port} is already in use. Retrying in 2 seconds...`);
+      setTimeout(() => {
+        server.listen({
+          port,
+          host: "0.0.0.0",
+          reusePort: true,
+        }, () => {
+          log(`serving on port ${port}`);
+        });
+      }, 2000);
     } else {
       throw err;
     }
