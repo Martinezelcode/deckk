@@ -1,3 +1,6 @@
+/* Mobile Compact Design Styles */
+@import './styles/mobile-compact.css';
+
 /* SF Pro Rounded Font Configuration */
 @font-face {
   font-family: 'SF Pro Rounded';
@@ -6,9 +9,6 @@
   font-style: normal;
   font-display: swap;
 }
-
-/* Mobile Compact Design Styles */
-@import './styles/mobile-compact.css';
 
 @tailwind base;
 @tailwind components;

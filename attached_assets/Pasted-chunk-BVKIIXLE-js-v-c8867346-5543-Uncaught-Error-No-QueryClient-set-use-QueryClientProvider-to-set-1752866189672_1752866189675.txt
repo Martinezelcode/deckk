@@ -1,0 +1,37 @@
+chunk-BVKIIXLE.js?v=c8867346:5543 Uncaught Error: No QueryClient set, use QueryClientProvider to set one
+    at useQueryClient (chunk-BVKIIXLE.js?v=c8867346:5543:11)
+    at useMutation (chunk-BVKIIXLE.js?v=c8867346:5718:18)
+    at useConnect (chunk-BVKIIXLE.js?v=c8867346:6005:46)
+    at useWalletConnectors (@rainbow-me_rainbowkit.js?v=c8867346:37318:67)
+    at usePreloadImages (@rainbow-me_rainbowkit.js?v=c8867346:37866:28)
+    at RainbowKitProvider (@rainbow-me_rainbowkit.js?v=c8867346:37927:3)
+    at renderWithHooks (chunk-EXXBUUB7.js?v=c8867346:11568:26)
+    at mountIndeterminateComponent (chunk-EXXBUUB7.js?v=c8867346:14946:21)
+    at beginWork (chunk-EXXBUUB7.js?v=c8867346:15934:22)
+    at HTMLUnknownElement.callCallback2 (chunk-EXXBUUB7.js?v=c8867346:3674:22)Understand this error
+chunk-EXXBUUB7.js?v=c8867346:14052 The above error occurred in the <RainbowKitProvider> component:
+
+    at RainbowKitProvider (https://super-lamp-jvj9qxw7555fqwvp-5173.app.github.dev/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=c8867346:37916:3)
+    at Hydrate (https://super-lamp-jvj9qxw7555fqwvp-5173.app.github.dev/node_modules/.vite/deps/chunk-BVKIIXLE.js?v=c8867346:3287:11)
+    at WagmiProvider (https://super-lamp-jvj9qxw7555fqwvp-5173.app.github.dev/node_modules/.vite/deps/chunk-BVKIIXLE.js?v=c8867346:3311:11)
+    at App (https://super-lamp-jvj9qxw7555fqwvp-5173.app.github.dev/src/App.tsx?t=1752864502399:64:27)
+    at Router (https://super-lamp-jvj9qxw7555fqwvp-5173.app.github.dev/node_modules/.vite/deps/wouter.js?v=c8867346:163:17)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-EXXBUUB7.js?v=c8867346:14052Understand this error
+chunk-EXXBUUB7.js?v=c8867346:19441 Uncaught Error: No QueryClient set, use QueryClientProvider to set one
+    at useQueryClient (chunk-BVKIIXLE.js?v=c8867346:5543:11)
+    at useMutation (chunk-BVKIIXLE.js?v=c8867346:5718:18)
+    at useConnect (chunk-BVKIIXLE.js?v=c8867346:6005:46)
+    at useWalletConnectors (@rainbow-me_rainbowkit.js?v=c8867346:37318:67)
+    at usePreloadImages (@rainbow-me_rainbowkit.js?v=c8867346:37866:28)
+    at RainbowKitProvider (@rainbow-me_rainbowkit.js?v=c8867346:37927:3)
+    at renderWithHooks (chunk-EXXBUUB7.js?v=c8867346:11568:26)
+    at mountIndeterminateComponent (chunk-EXXBUUB7.js?v=c8867346:14946:21)
+    at beginWork (chunk-EXXBUUB7.js?v=c8867346:15934:22)
+    at beginWork$1 (chunk-EXXBUUB7.js?v=c8867346:19781:22)Understand this error
+index.es-66WNWGI4.js?v=c8867346:16770 Unable to get preferred account types
+inpage.js:1 Uncaught (in promise) TypeError: Error in invocation of runtime.sendMessage(optional string extensionId, any message, optional object options, optional function callback): chrome.runtime.sendMessage() called from a webpage must specify an Extension ID (string) for its first argument.
+    at Bt (inpage.js:1:799095)
+    at inpage.js:1:799517Understand this error

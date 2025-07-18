@@ -44,40 +44,8 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Initialize Telegram bot
-  const telegramBot = createTelegramBot();
-  if (telegramBot) {
-    console.log('🔧 Testing Telegram bot configuration...');
-    const connectionTest = await telegramBot.testConnection();
-    
-    if (connectionTest.connected) {
-      console.log('✅ Telegram bot ready for broadcasting');
-      console.log(`   Bot: ${connectionTest.botInfo?.username}`);
-      console.log(`   Channel: ${connectionTest.channelInfo?.title || connectionTest.channelInfo?.first_name}`);
-    } else {
-      console.log('❌ Telegram bot configuration error:');
-      console.log(`   ${connectionTest.error}`);
-      console.log('');
-      console.log('📋 TELEGRAM SETUP INSTRUCTIONS:');
-      console.log('   1. Create a bot with @BotFather on Telegram');
-      console.log('   2. Add the bot to your channel/group as admin');
-      console.log('   3. Get the correct channel ID:');
-      console.log('      - For channels: starts with -100');
-      console.log('      - For groups: positive number');
-      console.log('      - Or use @username format');
-      console.log('   4. Update TELEGRAM_CHANNEL_ID secret');
-    }
-  }
-
   const server = await registerRoutes(app);
   addAuthTestRoutes(app);
-
-  // Initialize notification algorithm service
-  const { storage } = await import('./storage');
-  const notificationAlgorithm = new NotificationAlgorithmService(storage);
-  console.log('🔔 Starting notification algorithm service...');
-  notificationAlgorithm.startNotificationScheduler();
-  console.log('✅ Notification algorithm service started');
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
@@ -97,30 +65,50 @@ app.use((req, res, next) => {
   }
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
+  // Other ports are firewalled. Default to 3000 if not specified.
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
+  const port = parseInt('3000', 10);
   
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
+  server.listen(port, "0.0.0.0", () => {
     log(`serving on port ${port}`);
+    
+    // Initialize services after server is running
+    setTimeout(async () => {
+      try {
+        // Initialize Telegram bot
+        const telegramBot = createTelegramBot();
+        if (telegramBot) {
+          console.log('🔧 Testing Telegram bot configuration...');
+          const connectionTest = await telegramBot.testConnection();
+          
+          if (connectionTest.connected) {
+            console.log('✅ Telegram bot ready for broadcasting');
+            console.log(`   Bot: ${connectionTest.botInfo?.username}`);
+            console.log(`   Channel: ${connectionTest.channelInfo?.title || connectionTest.channelInfo?.first_name}`);
+          } else {
+            console.log('❌ Telegram bot configuration error:');
+            console.log(`   ${connectionTest.error}`);
+          }
+        }
+
+        // Initialize notification algorithm service
+        const { storage } = await import('./storage');
+        const notificationAlgorithm = new NotificationAlgorithmService(storage);
+        console.log('🔔 Starting notification algorithm service...');
+        notificationAlgorithm.startNotificationScheduler();
+        console.log('✅ Notification algorithm service started');
+      } catch (error) {
+        console.error('Error initializing background services:', error);
+      }
+    }, 1000);
   }).on('error', (err: any) => {
     if (err.code === 'EADDRINUSE') {
-      console.error(`Port ${port} is already in use. Retrying in 2 seconds...`);
-      setTimeout(() => {
-        server.listen({
-          port,
-          host: "0.0.0.0",
-          reusePort: true,
-        }, () => {
-          log(`serving on port ${port}`);
-        });
-      }, 2000);
+      console.error(`Port ${port} is already in use. Please kill the existing process and try again.`);
+      console.error('Run: pkill -f "npm run dev" && pkill -f "tsx server/index.ts"');
+      process.exit(1);
     } else {
+      console.error('Server error:', err);
       throw err;
     }
   });
