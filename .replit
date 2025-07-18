@@ -18,7 +18,7 @@ localPort = 5000
 PORT = "5000"
 
 [workflows]
-runButton = "Dev Server Fixed"
+runButton = "Full Stack Dev"
 
 [[workflows.workflow]]
 name = "Project"
@@ -76,3 +76,12 @@ args = "cd client && npm run dev"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm run server"
+
+[[workflows.workflow]]
+name = "Full Stack Dev"
+author = 45209591
+mode = "parallel"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
