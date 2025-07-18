@@ -62,14 +62,14 @@ export const events = pgTable("events", {
   category: varchar("category").notNull(), // crypto, sports, gaming, music, politics
   status: varchar("status").default("active"), // active, completed, cancelled, pending_admin
   creatorId: varchar("creator_id").notNull(),
-  eventPool: decimal("event_pool", { precision: 10, scale: 2 }).default("0.00"), // Single unified pool
-  yesPool: decimal("yes_pool", { precision: 10, scale: 2 }).default("0.00"), // For display purposes
-  noPool: decimal("no_pool", { precision: 10, scale: 2 }).default("0.00"), // For display purposes
-  entryFee: decimal("entry_fee", { precision: 10, scale: 2 }).notNull(),
+  eventPool: integer("event_pool").default(0), // Single unified pool in coins
+  yesPool: integer("yes_pool").default(0), // For display purposes in coins
+  noPool: integer("no_pool").default(0), // For display purposes in coins
+  entryFee: integer("entry_fee").notNull(), // Changed to coins
   endDate: timestamp("end_date").notNull(),
   result: boolean("result"), // true for yes, false for no, null for pending
   adminResult: boolean("admin_result"), // Admin's final decision on event outcome
-  creatorFee: decimal("creator_fee", { precision: 10, scale: 2 }).default("0.00"), // 3% creator fee
+  creatorFee: integer("creator_fee").default(0), // 3% creator fee in coins
   isPrivate: boolean("is_private").default(false), // Private events need approval
   maxParticipants: integer("max_participants").default(100), // FCFS limit
   imageUrl: varchar("image_url"),
@@ -87,7 +87,7 @@ export const eventParticipants = pgTable("event_participants", {
   amount: integer("amount").notNull(), // Changed to coins
   status: varchar("status").default("active"), // active, matched, won, lost
   matchedWith: varchar("matched_with"), // User ID of opponent (for FCFS matching)
-  payout: decimal("payout", { precision: 10, scale: 2 }).default("0.00"), // Winner payout amount
+  payout: integer("payout").default(0), // Winner payout amount in coins
   joinedAt: timestamp("joined_at").defaultNow(),
   payoutAt: timestamp("payout_at"),
 });
@@ -96,9 +96,9 @@ export const eventParticipants = pgTable("event_participants", {
 export const eventPools = pgTable("event_pools", {
   id: serial("id").primaryKey(),
   eventId: integer("event_id").notNull(),
-  yesAmount: decimal("yes_amount", { precision: 10, scale: 2 }).default("0.00"),
-  noAmount: decimal("no_amount", { precision: 10, scale: 2 }).default("0.00"),
-  totalPool: decimal("total_pool", { precision: 10, scale: 2 }).default("0.00"),
+  yesAmount: integer("yes_amount").default(0), // In coins
+  noAmount: integer("no_amount").default(0), // In coins
+  totalPool: integer("total_pool").default(0), // In coins
   creatorFeeCollected: boolean("creator_fee_collected").default(false),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -109,7 +109,7 @@ export const eventJoinRequests = pgTable("event_join_requests", {
   eventId: integer("event_id").notNull(),
   userId: varchar("user_id").notNull(),
   prediction: boolean("prediction").notNull(), // true for yes, false for no
-  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  amount: integer("amount").notNull(), // In coins
   status: varchar("status").default("pending"), // pending, approved, rejected
   requestedAt: timestamp("requested_at").defaultNow(),
   respondedAt: timestamp("responded_at"),
@@ -161,7 +161,7 @@ export const eventMatches = pgTable("event_matches", {
   eventId: integer("event_id").notNull(),
   challenger: varchar("challenger").notNull(),
   challenged: varchar("challenged").notNull(),
-  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  amount: integer("amount").notNull(), // In coins
   status: varchar("status").default("pending"), // pending, accepted, completed, cancelled
   result: varchar("result"), // challenger_won, challenged_won, draw
   createdAt: timestamp("created_at").defaultNow(),
@@ -198,7 +198,7 @@ export const challengeMessages = pgTable("challenge_messages", {
 export const escrow = pgTable("escrow", {
   id: serial("id").primaryKey(),
   challengeId: integer("challenge_id").notNull(),
-  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  amount: integer("amount").notNull(), // In coins
   status: varchar("status").default("holding"), // holding, released, refunded
   createdAt: timestamp("created_at").defaultNow(),
   releasedAt: timestamp("released_at"),

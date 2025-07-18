@@ -31,7 +31,7 @@ export default function EventCreate() {
       return await apiRequest("POST", "/api/events", {
         ...eventData,
         endDate: endDateTime.toISOString(),
-        entryFee: parseFloat(entryFee),
+        entryFee: parseInt(entryFee),
       });
     },
     onSuccess: () => {
@@ -180,7 +180,7 @@ export default function EventCreate() {
 
             <div className="mobile-form-field md:mb-6">
               <Label htmlFor="entryFee" className="mobile-form-label md:text-base md:font-semibold md:text-slate-700 md:dark:text-slate-300">
-                Entry Fee (₦) *
+                Entry Fee (Coins) *
               </Label>
               <Input
                 id="entryFee"
