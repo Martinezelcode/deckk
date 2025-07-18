@@ -55,14 +55,22 @@ webpush.setVapidDetails(
 
 
 
-// Initialize Telegram sync service
-let telegramSync = createTelegramSync(pusher);
-if (telegramSync) {
-  console.log("🔧 Initializing Telegram sync service...");
-  telegramSync.initialize().catch((error) => {
-    console.error("❌ Telegram sync initialization failed:", error);
-    console.log("📱 BetChat will continue without Telegram sync");
-  });
+// Initialize Telegram sync service (deferred)
+let telegramSync: any = null;
+
+// Function to initialize Telegram sync when needed
+function initializeTelegramSync() {
+  if (!telegramSync) {
+    telegramSync = createTelegramSync(pusher);
+    if (telegramSync) {
+      console.log("🔧 Initializing Telegram sync service...");
+      telegramSync.initialize().catch((error) => {
+        console.error("❌ Telegram sync initialization failed:", error);
+        console.log("📱 BetChat will continue without Telegram sync");
+      });
+    }
+  }
+  return telegramSync;
 }
 
 interface AuthenticatedRequest extends Request {
@@ -1526,10 +1534,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       // Forward to Telegram if sync is available
-      const telegramSync = getTelegramSync();
-      if (telegramSync && telegramSync.isReady()) {
+      const sync = initializeTelegramSync();
+      if (sync && sync.isReady()) {
         const senderName = user?.firstName || user?.username || 'BetChat User';
-        await telegramSync.sendMessageToTelegram(message.trim(), senderName);
+        await sync.sendMessageToTelegram(message.trim(), senderName);
       }
 
       res.json(newMessage);
@@ -1542,7 +1550,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Telegram sync status route
   app.get('/api/telegram/status', isAuthenticated, async (req: AuthenticatedRequest, res) => {
     try {
-      const telegramSync = getTelegramSync();
+      const sync = initializeTelegramSync();
       const telegramBot = getTelegramBot();
 
       let syncStatus = { 
@@ -1557,9 +1565,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "Telegram bot not configured" 
       };
 
-      if (telegramSync) {
-        const isReady = telegramSync.isReady();
-        const groupInfo = isReady ? await telegramSync.getGroupInfo() : null;
+      if (sync) {
+        const isReady = sync.isReady();
+        const groupInfo = isReady ? await sync.getGroupInfo() : null;
         syncStatus = {
           enabled: true,
           connected: isReady,

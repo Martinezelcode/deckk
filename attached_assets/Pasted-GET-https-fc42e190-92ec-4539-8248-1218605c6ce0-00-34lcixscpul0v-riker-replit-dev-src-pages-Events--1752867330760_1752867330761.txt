@@ -1,0 +1,28 @@
+GET https://fc42e190-92ec-4539-8248-1218605c6ce0-00-34lcixscpul0v.riker.replit.dev/src/pages/Events.tsx net::ERR_ABORTED 502 (Bad Gateway)Understand this error
+App.tsx:32  GET https://fc42e190-92ec-4539-8248-1218605c6ce0-00-34lcixscpul0v.riker.replit.dev/src/pages/Challenges.tsx net::ERR_ABORTED 502 (Bad Gateway)Understand this error
+App.tsx:31  GET https://fc42e190-92ec-4539-8248-1218605c6ce0-00-34lcixscpul0v.riker.replit.dev/src/pages/EventCreate.tsx net::ERR_ABORTED 502 (Bad Gateway)Understand this error
+App.tsx:33  GET https://fc42e190-92ec-4539-8248-1218605c6ce0-00-34lcixscpul0v.riker.replit.dev/src/pages/Friends.tsx net::ERR_ABORTED 502 (Bad Gateway)Understand this error
+App.tsx:34  GET https://fc42e190-92ec-4539-8248-1218605c6ce0-00-34lcixscpul0v.riker.replit.dev/src/pages/Profile.tsx net::ERR_ABORTED 502 (Bad Gateway)Understand this error
+App.tsx:36  GET https://fc42e190-92ec-4539-8248-1218605c6ce0-00-34lcixscpul0v.riker.replit.dev/src/pages/History.tsx net::ERR_ABORTED 502 (Bad Gateway)Understand this error
+App.tsx:35  GET https://fc42e190-92ec-4539-8248-1218605c6ce0-00-34lcixscpul0v.riker.replit.dev/src/pages/ProfileSettings.tsx net::ERR_ABORTED 502 (Bad Gateway)Understand this error
+App.tsx:37  GET https://fc42e190-92ec-4539-8248-1218605c6ce0-00-34lcixscpul0v.riker.replit.dev/src/pages/Notifications.tsx net::ERR_ABORTED 502 (Bad Gateway)Understand this error
+App.tsx:39  GET https://fc42e190-92ec-4539-8248-1218605c6ce0-00-34lcixscpul0v.riker.replit.dev/src/pages/Shop.tsx net::ERR_ABORTED 502 (Bad Gateway)Understand this error
+App.tsx:40  GET https://fc42e190-92ec-4539-8248-1218605c6ce0-00-34lcixscpul0v.riker.replit.dev/src/pages/ReferralPage.tsx net::ERR_ABORTED 502 (Bad Gateway)Understand this error
+App.tsx:41  GET https://fc42e190-92ec-4539-8248-1218605c6ce0-00-34lcixscpul0v.riker.replit.dev/src/pages/Settings.tsx net::ERR_ABORTED 502 (Bad Gateway)Understand this error
+App.tsx:38  GET https://fc42e190-92ec-4539-8248-1218605c6ce0-00-34lcixscpul0v.riker.replit.dev/src/pages/WalletPage.tsx net::ERR_ABORTED 502 (Bad Gateway)Understand this error
+client:536 WebSocket connection to 'wss://fc42e190-92ec-4539-8248-1218605c6ce0-00-34lcixscpul0v.riker.replit.dev/?token=goEMw81vgjzW' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531Understand this error
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=goEMw81vgjzW' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555Understand this error
+vendor-B2w3_AxV.js:1 Datadog Browser SDK: No storage available for session. We will not send any data.
+init @ vendor-B2w3_AxV.js:1
+(anonymous) @ vendor-B2w3_AxV.js:1
+va @ vendor-B2w3_AxV.js:1
+(anonymous) @ vendor-B2w3_AxV.js:1
+(anonymous) @ index-BNvOK7d1.js:37Understand this warning
