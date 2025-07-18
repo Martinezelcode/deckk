@@ -1,8 +1,15 @@
+// Add global declaration for Telegram auth callback
+declare global {
+  interface Window {
+    onTelegramAuth?: (user: any) => void;
+  }
+}
 import { useAuth } from "@/hooks/useAuth";
 import { useLocation, useParams } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { useTheme } from "@/contexts/ThemeProvider";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogTrigger, DialogContent, DialogClose, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion } from "framer-motion";
@@ -36,13 +43,50 @@ export default function Landing() {
     }
   }, [isAuthenticated, setLocation, params.code, toast]);
 
-  const handleGetStarted = () => {
-    // Store referral code before redirecting to signup
-    if (referralCode) {
-      localStorage.setItem('referralCode', referralCode);
-    }
-    window.location.href = "/api/login";
-  };
+  const [open, setOpen] = useState(false);
+
+  // Telegram login widget integration
+  useEffect(() => {
+    if (!open) return;
+    const container = document.getElementById('telegram-login-container');
+    if (container) container.innerHTML = '';
+    // Fallback message if widget fails
+    let fallbackTimeout: NodeJS.Timeout;
+    window.onTelegramAuth = function(user) {
+      fetch('/api/auth/telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user)
+      })
+      .then(res => res.json())
+      .then(data => {
+        toast({ title: 'Telegram Login', description: 'Welcome, ' + data.first_name });
+        setOpen(false);
+      });
+    };
+    // Load Telegram widget script
+    const botUsername = 'BantahSocialBot'; // <-- Update this if needed
+    const script = document.createElement('script');
+    script.src = 'https://telegram.org/js/telegram-widget.js?7';
+    script.setAttribute('data-telegram-login', botUsername);
+    script.setAttribute('data-size', 'large');
+    script.setAttribute('data-userpic', 'false');
+    script.setAttribute('data-request-access', 'write');
+    script.setAttribute('data-onauth', 'onTelegramAuth(user)');
+    container?.appendChild(script);
+    // Fallback if widget doesn't render
+    fallbackTimeout = setTimeout(() => {
+      if (container && container.innerHTML.trim() === '') {
+        container.innerHTML = `<div class='text-red-600 text-center mt-2'>Telegram login widget failed to load.<br/>Check your bot username or try again later.</div>`;
+      }
+    }, 3000);
+    // Cleanup on close
+    return () => {
+      if (container) container.innerHTML = '';
+      delete window.onTelegramAuth;
+      clearTimeout(fallbackTimeout);
+    };
+  }, [open, toast]);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 theme-transition">
@@ -60,12 +104,23 @@ export default function Landing() {
             </div>
             <div className="flex items-center space-x-4">
               <ThemeToggle />
-              <Button 
-                onClick={() => window.location.href = '/api/login'}
-                className="bg-primary hover:bg-primary/90"
-              >
-                Sign In
-              </Button>
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-primary hover:bg-primary/90">Sign In</Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md mx-auto">
+                <DialogTitle className="text-xl font-bold mb-4">Sign In</DialogTitle>
+                <DialogDescription className="mb-4 text-slate-600 dark:text-slate-400">
+                  Choose a sign-in method below. Your data is secure.
+                </DialogDescription>
+                <div className="mb-2 text-center text-blue-600 font-medium">Sign in with Telegram below:</div>
+                <div id="telegram-login-container" className="mt-4"></div>
+                {/* Add other auth options here */}
+                <DialogClose asChild>
+                  <Button variant="outline" className="w-full">Cancel</Button>
+                </DialogClose>
+              </DialogContent>
+            </Dialog>
             </div>
           </div>
         </div>
@@ -111,7 +166,7 @@ export default function Landing() {
               <Button 
                 size="lg" 
                 className="bg-[#7440ff] hover:bg-[#5f35cc] text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                onClick={handleGetStarted}
+                onClick={() => setOpen(true)}
               >
                 {referralCode ? 'Sign Up with Bonus' : 'Get Started Free'}
                 <Zap className="ml-2 h-5 w-5" />

@@ -8,27 +8,15 @@ import memoize from "memoizee";
 import connectPg from "connect-pg-simple";
 import { storage } from "./storage";
 
-if (!process.env.REPLIT_DOMAINS) {
-  throw new Error("Environment variable REPLIT_DOMAINS not provided");
-}
+// if (!process.env.REPLIT_DOMAINS) {
+//   throw new Error("Environment variable REPLIT_DOMAINS not provided");
+// }
 
 const getOidcConfig = memoize(
   async () => {
-    try {
-      const issuerUrl = process.env.ISSUER_URL ?? "https://replit.com/oidc";
-      const replId = process.env.REPL_ID!;
-      
-      console.log("OIDC Configuration:");
-      console.log("- Issuer URL:", issuerUrl);
-      console.log("- REPL_ID:", replId);
-      
-      const config = await client.discovery(new URL(issuerUrl), replId);
-      console.log("OIDC discovery successful");
-      return config;
-    } catch (error) {
-      console.error("OIDC discovery failed:", error);
-      throw error;
-    }
+    // OIDC logic bypassed for now
+    console.log("OIDC logic bypassed: REPL_ID not set");
+    return {};
   },
   { maxAge: 3600 * 1000 }
 );
@@ -111,19 +99,7 @@ export async function setupAuth(app: Express) {
     }
   };
 
-  for (const domain of process.env
-    .REPLIT_DOMAINS!.split(",")) {
-    const strategy = new Strategy(
-      {
-        name: `replitauth:${domain}`,
-        config,
-        scope: "openid email profile offline_access",
-        callbackURL: `https://${domain}/api/callback`,
-      },
-      verify,
-    );
-    passport.use(strategy);
-  }
+  // Bypassed REPLIT_DOMAINS logic for now
 
   passport.serializeUser((user: Express.User, cb) => cb(null, user));
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));

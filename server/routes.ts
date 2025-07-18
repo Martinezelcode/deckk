@@ -89,6 +89,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
 
+  // Telegram Auth endpoint
+  app.post('/api/auth/telegram', async (req: Request, res: Response) => {
+    const { id, first_name, last_name, username, photo_url, auth_date, hash } = req.body;
+    // TODO: Validate Telegram login using hash and secret
+    // For now, accept all and return user info
+    if (!id || !username) {
+      return res.status(400).json({ message: 'Missing Telegram user info' });
+    }
+    // You should verify the hash here for security!
+    // See: https://core.telegram.org/widgets/login#checking-authorization
+    // For now, just return user
+    return res.json({
+      id,
+      first_name,
+      last_name,
+      username,
+      photo_url,
+      auth_date,
+      telegram: true
+    });
+  });
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: AuthenticatedRequest, res) => {
     try {
