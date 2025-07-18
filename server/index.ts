@@ -101,11 +101,20 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || '5000', 10);
+  
   server.listen({
     port,
     host: "0.0.0.0",
     reusePort: true,
   }, () => {
     log(`serving on port ${port}`);
+  }).on('error', (err: any) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`Port ${port} is already in use. Please kill the existing process and try again.`);
+      console.error('Run: pkill -f "npm run dev" && pkill -f "tsx server/index.ts"');
+      process.exit(1);
+    } else {
+      throw err;
+    }
   });
 })();
